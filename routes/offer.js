@@ -47,7 +47,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
             await newOffer.save();
             res.status(200).json(newOffer);
           } else {
-            res.status(400).json({
+            res.status(401).json({
               error: { message: 'Missing a picture' },
             });
           }
@@ -67,7 +67,8 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(400).json({ error: { message: error.message } });
+    // res.status(400).json({ error: { message: error.message } });
+    res.status(401).json({ error: 'error.message' });
   }
 });
 
