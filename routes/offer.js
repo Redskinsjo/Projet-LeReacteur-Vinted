@@ -20,13 +20,13 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       if (token.length > 0) {
         const userSearched = await User.findOne({ token });
         if (userSearched) {
-          let details = [];
-          for (const key in body) {
-            if (key === 'details') {
-              // details.push({ [key]: body[key] });
-              details = [...body[key]];
-            }
-          }
+          // let details = [];
+          // for (const key in body) {
+          //   if (key === 'details') {
+          //     details.push({ [key]: body[key] });
+          //     details = [...body[key]];
+          //   }
+          // }
           if (req.files.picture) {
             const pictureToUpload = req.files.picture.path;
             const returnedPicture = await cloudinary.uploader.upload(
@@ -40,7 +40,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
               product_name: body.title,
               product_description: body.description,
               product_price: body.price,
-              product_details: details,
+              product_details: [...body.details],
               owner: req.user,
               product_image: returnedPicture,
             });
@@ -68,6 +68,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
     }
   } catch (error) {
     // res.status(400).json({ error: { message: error.message } });
+    console.log(error);
     res.status(400).json({ error: error.message });
   }
 });
