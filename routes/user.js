@@ -9,10 +9,10 @@ const cloudinary = require("cloudinary");
 Router.post("/user/signup", async (req, res) => {
   const body = req.fields;
 
-  if (!req.fields.username) {
+  if (!body.username) {
     res.status(400).json({ error: { message: "Missing username" } });
   } else {
-    const { email, username, phone, password } = req.fields;
+    const { email, username, phone, password } = body;
 
     try {
       const oneUser = await User.findOne({ email });

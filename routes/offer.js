@@ -1,9 +1,9 @@
-const express = require("express");
+const express = require('express');
 const Router = express.Router();
-const Offer = require("../models/Offer");
-const User = require("../models/User");
-const isAuthenticated = require("../middlewares/isAuthenticated");
-const cloudinary = require("cloudinary").v2;
+const Offer = require('../models/Offer');
+const User = require('../models/User');
+const isAuthenticated = require('../middlewares/isAuthenticated');
+const cloudinary = require('cloudinary').v2;
 
 // cloudinary.config({
 //   cloud_name: "de822mdsy",
@@ -11,9 +11,9 @@ const cloudinary = require("cloudinary").v2;
 //   api_secret: "Ijex7t-hawHHXD9uX10L0f3Myso",
 // });
 
-Router.post("/offer/publish", isAuthenticated, async (req, res) => {
+Router.post('/offer/publish', isAuthenticated, async (req, res) => {
   const body = req.fields;
-  const token = req.headers.authorization.replace("Bearer ", "");
+  const token = req.headers.authorization.replace('Bearer ', '');
 
   try {
     if (Object.keys(body).length > 0) {
@@ -22,13 +22,9 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
         if (userSearched) {
           let details = [];
           for (const key in body) {
-            if (
-              key !== "title" &&
-              key !== "description" &&
-              key !== "price" &&
-              key !== "picture"
-            ) {
-              details.push({ [key]: body[key] });
+            if (key === 'details') {
+              // details.push({ [key]: body[key] });
+              details = [...body[key]];
             }
           }
           if (req.files.picture) {
@@ -36,7 +32,7 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
             const returnedPicture = await cloudinary.uploader.upload(
               pictureToUpload,
               {
-                folder: "/vinted/offers",
+                folder: '/vinted/offers',
                 use_filename: true,
               }
             );
@@ -44,7 +40,7 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
               product_name: body.title,
               product_description: body.description,
               product_price: body.price,
-              product_details: details,
+              product_details: body.details,
               owner: req.user,
               product_image: returnedPicture,
             });
@@ -52,22 +48,22 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
             res.status(200).json(newOffer);
           } else {
             res.status(400).json({
-              error: { message: "Missing a picture" },
+              error: { message: 'Missing a picture' },
             });
           }
         } else {
           res.status(400).json({
-            error: { message: "The user is not identified" },
+            error: { message: 'The user is not identified' },
           });
         }
       } else {
         res.status(400).json({
-          error: { message: "The request should include a user token" },
+          error: { message: 'The request should include a user token' },
         });
       }
     } else {
       res.status(400).json({
-        error: { message: "The request should include body parameters" },
+        error: { message: 'The request should include body parameters' },
       });
     }
   } catch (error) {
@@ -75,7 +71,7 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
   }
 });
 
-Router.put("/offer/modify", isAuthenticated, async (req, res) => {
+Router.put('/offer/modify', isAuthenticated, async (req, res) => {
   const query = req.query;
   const body = req.fields;
   const files = req.files;
@@ -86,7 +82,7 @@ Router.put("/offer/modify", isAuthenticated, async (req, res) => {
       if (offerSearched) {
         if (body) {
           for (const key in body) {
-            if (typeof body[key] !== "object") {
+            if (typeof body[key] !== 'object') {
               offerSearched[key] = body[key];
             }
           }
@@ -102,19 +98,19 @@ Router.put("/offer/modify", isAuthenticated, async (req, res) => {
 
         res.status(200).json({ offerSearched });
       } else {
-        res.status(400).json({ error: { message: "The offer was not found" } });
+        res.status(400).json({ error: { message: 'The offer was not found' } });
       }
     } else {
       res
         .status(400)
-        .json({ error: { message: "An id has to be specified in the query" } });
+        .json({ error: { message: 'An id has to be specified in the query' } });
     }
   } catch (error) {
     res.status(400).json({ error: { message: error.message } });
   }
 });
 
-Router.delete("/offer/delete", isAuthenticated, async (req, res) => {
+Router.delete('/offer/delete', isAuthenticated, async (req, res) => {
   const query = req.query;
 
   try {
@@ -122,21 +118,21 @@ Router.delete("/offer/delete", isAuthenticated, async (req, res) => {
       const offerSearched = await Offer.findById(query.id);
       if (offerSearched) {
         await offerSearched.deleteOne();
-        res.status(400).json({ message: "The offer was well deleted" });
+        res.status(400).json({ message: 'The offer was well deleted' });
       } else {
-        res.status(400).json({ error: { message: "The offer was not found" } });
+        res.status(400).json({ error: { message: 'The offer was not found' } });
       }
     } else {
       res
         .status(400)
-        .json({ error: { message: "An id has to be specified in the query" } });
+        .json({ error: { message: 'An id has to be specified in the query' } });
     }
   } catch (error) {
     res.status(400).json({ error: { message: error.message } });
   }
 });
 
-Router.get("/offers", async (req, res) => {
+Router.get('/offers', async (req, res) => {
   const q = req.query;
   //   title : String
   // priceMin : Number
@@ -151,31 +147,31 @@ Router.get("/offers", async (req, res) => {
       const pageLimit = 2;
       let skipCount = 0;
       for (const key in q) {
-        if (key === "title") search["product_name"] = new RegExp(q[key], "i");
-        if (key === "priceMin") {
-          if (search["product_price"]) search["product_price"]["$gte"] = q[key];
+        if (key === 'title') search['product_name'] = new RegExp(q[key], 'i');
+        if (key === 'priceMin') {
+          if (search['product_price']) search['product_price']['$gte'] = q[key];
           else {
-            search["product_price"] = {};
-            search["product_price"]["$gte"] = q[key];
+            search['product_price'] = {};
+            search['product_price']['$gte'] = q[key];
           }
         }
-        if (key === "priceMax") {
-          if (Object.keys(search["product_price"]).length > 0)
-            search["product_price"]["$lte"] = q[key];
+        if (key === 'priceMax') {
+          if (Object.keys(search['product_price']).length > 0)
+            search['product_price']['$lte'] = q[key];
           else {
-            search["product_price"] = {};
-            search["product_price"]["$lte"] = q[key];
+            search['product_price'] = {};
+            search['product_price']['$lte'] = q[key];
           }
         }
-        if (key === "sort") {
-          if (q[key] === "price-desc") sort["product_price"] = "desc";
-          else if (q[key] === "price-asc") sort["product_price"] = "asc";
+        if (key === 'sort') {
+          if (q[key] === 'price-desc') sort['product_price'] = 'desc';
+          else if (q[key] === 'price-asc') sort['product_price'] = 'asc';
         }
-        if (key === "page") skipCount = q[key];
+        if (key === 'page') skipCount = q[key];
       }
       console.log(skipCount);
       const offersSearched = await Offer.find(search)
-        .populate({ path: "owner", select: "-hash -salt" })
+        .populate({ path: 'owner', select: '-hash -salt' })
         .sort(Object.keys(sort).length === 0 ? null : sort) // .sort(sort)
         .limit(pageLimit)
         .skip(skipCount === 0 ? null : pageLimit * (skipCount - 1));
@@ -191,23 +187,23 @@ Router.get("/offers", async (req, res) => {
       res.status(400).json({ error: { message: error.message } });
     }
   } else {
-    res.status(400).json({ error: { message: "Missing parameters" } });
+    res.status(400).json({ error: { message: 'Missing parameters' } });
   }
 });
 
-Router.get("/offer/:id", async (req, res) => {
+Router.get('/offer/:id', async (req, res) => {
   const params = req.params;
 
   try {
     if (params.id) {
       const offerSearched = await Offer.findById(params.id).populate({
-        path: "owner",
-        select: "-hash -salt",
+        path: 'owner',
+        select: '-hash -salt',
       });
       if (offerSearched) {
         res.status(200).json(offerSearched);
       } else {
-        res.status(400).json({ error: { message: "No offer was found" } });
+        res.status(400).json({ error: { message: 'No offer was found' } });
       }
     }
   } catch (error) {
