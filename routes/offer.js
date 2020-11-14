@@ -40,7 +40,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
               product_name: body.title,
               product_description: body.description,
               product_price: body.price,
-              product_details: body.details,
+              product_details: details,
               owner: req.user,
               product_image: returnedPicture,
             });
