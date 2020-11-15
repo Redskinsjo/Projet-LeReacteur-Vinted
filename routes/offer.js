@@ -3,14 +3,14 @@ const Router = express.Router();
 const Offer = require('../models/Offer');
 const User = require('../models/User');
 const isAuthenticated = require('../middlewares/isAuthenticated');
-require('dotenv').config();
+// require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
 
 // Router.post('/offer/publish', isAuthenticated, async (req, res) => {
 //   const body = req.fields;
