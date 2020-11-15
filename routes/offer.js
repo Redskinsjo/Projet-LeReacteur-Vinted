@@ -97,7 +97,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       // }
       if (req.files.product_image) {
         const pictureToUpload = req.files.product_image.path;
-        res.json(pictureToUpload);
+        // res.json(pictureToUpload);
         const returnedPicture = await cloudinary.uploader.upload(
           pictureToUpload,
           {
@@ -115,7 +115,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
           product_pictures: body.product_pictures,
         });
         await newOffer.save();
-        // res.status(200).json(newOffer);
+        res.status(200).json(newOffer);
       } else {
         res.status(401).json({
           error: { message: 'Missing a picture' },
