@@ -11,7 +11,7 @@ const cloudinary = require('cloudinary').v2;
 //   api_secret: "Ijex7t-hawHHXD9uX10L0f3Myso",
 // });
 
-Router.post('/offer/publish', async (req, res) => {
+Router.post('/offer/publish', isAuthenticated, async (req, res) => {
   const body = req.fields;
   // const token = req.headers.authorization.replace('Bearer ', '');
 
@@ -41,6 +41,7 @@ Router.post('/offer/publish', async (req, res) => {
         product_description: body.product_description,
         product_price: body.product_price,
         product_details: body.product_details,
+        product_pictures: body.product_pictures,
         owner: req.user,
         product_image: body.product_image,
       });

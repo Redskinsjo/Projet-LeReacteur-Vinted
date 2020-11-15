@@ -10,6 +10,7 @@ const Offer = mongoose.model('Offer', {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  product_pictures: Array,
 });
 
 // const Offer = mongoose.model("Offer", {
