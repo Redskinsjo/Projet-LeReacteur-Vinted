@@ -104,12 +104,13 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
           }
         );
         const newOffer = new Offer({
-          product_name: body.produc_name,
+          product_name: body.product_name,
           product_description: body.product_description,
           product_price: body.product_price,
           product_details: body.product_details,
           owner: req.user,
           product_image: returnedPicture,
+          product_pictures: body.product_pictures,
         });
         await newOffer.save();
         res.status(200).json(newOffer);
