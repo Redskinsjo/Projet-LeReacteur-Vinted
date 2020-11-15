@@ -11,6 +11,73 @@ const cloudinary = require('cloudinary').v2;
 //   api_secret: "Ijex7t-hawHHXD9uX10L0f3Myso",
 // });
 
+// Router.post('/offer/publish', isAuthenticated, async (req, res) => {
+//   const body = req.fields;
+// const token = req.headers.authorization.replace('Bearer ', '');
+
+// try {
+//   if (Object.keys(body).length > 0) {
+// if (token.length > 0) {
+//   const userSearched = await User.findOne({ token });
+// if (userSearched) {
+// let details = [];
+// for (const key in body) {
+//   if (key === 'details') {
+//     details.push({ [key]: body[key] });
+//     details = [...body[key]];
+//   }
+// }
+// if (req.files.picture) {
+// const pictureToUpload = req.files.picture.path;
+// const returnedPicture = await cloudinary.uploader.upload(
+//   pictureToUpload,
+//   {
+//     folder: '/vinted/offers',
+//     use_filename: true,
+//   }
+// // );
+// const newOffer = new Offer({
+//   product_name: body.product_name,
+//   product_description: body.product_description,
+//   product_price: body.product_price,
+//   product_details: body.product_details,
+//   product_pictures: body.product_pictures,
+//   owner: req.user,
+//   product_image: body.product_image,
+// });
+// await newOffer.save();
+// res.status(200).json({
+//   message: 'newOffer has been added to the DB',
+//   body: req.fields,
+//   headers: req.headers,
+// });
+// } else {
+//   res.status(401).json({
+//     error: { message: 'Missing a picture' },
+//   });
+// }
+// } else {
+//   res.status(400).json({
+//     error: { message: 'The user is not identified' },
+//   });
+// }
+// } else {
+//   res.status(400).json({
+//     error: { message: 'The request should include a user token' },
+//   });
+// }
+//     } else {
+//       res.status(400).json({
+//         error: { message: 'The request should include body parameters' },
+//       });
+//     }
+//   } catch (error) {
+//     // res.status(400).json({ error: { message: error.message } });
+//     console.log(error);
+//     res.status(400).json({ error: error.message });
+//   }
+// });
+
 Router.post('/offer/publish', isAuthenticated, async (req, res) => {
   const body = req.fields;
   // const token = req.headers.authorization.replace('Bearer ', '');
@@ -18,44 +85,39 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
   try {
     if (Object.keys(body).length > 0) {
       // if (token.length > 0) {
-      //   const userSearched = await User.findOne({ token });
+      // const userSearched = await User.findOne({ token });
       // if (userSearched) {
-      let details = [];
-      for (const key in body) {
-        if (key === 'details') {
-          details.push({ [key]: body[key] });
-          details = [...body[key]];
-        }
-      }
-      // if (req.files.picture) {
-      // const pictureToUpload = req.files.picture.path;
-      // const returnedPicture = await cloudinary.uploader.upload(
-      //   pictureToUpload,
-      //   {
-      //     folder: '/vinted/offers',
-      //     use_filename: true,
+      // let details = [];
+      // for (const key in body) {
+      //   if (key === 'details') {
+      //     details.push({ [key]: body[key] });
+      //     details = [...body[key]];
       //   }
-      // );
-      const newOffer = new Offer({
-        product_name: body.product_name,
-        product_description: body.product_description,
-        product_price: body.product_price,
-        product_details: body.product_details,
-        product_pictures: body.product_pictures,
-        owner: req.user,
-        product_image: body.product_image,
-      });
-      await newOffer.save();
-      res.status(200).json({
-        message: 'newOffer has been added to the DB',
-        body: req.fields,
-        headers: req.headers,
-      });
-      // } else {
-      //   res.status(401).json({
-      //     error: { message: 'Missing a picture' },
-      //   });
       // }
+      if (req.files.product_image) {
+        const pictureToUpload = req.files.product_image.path;
+        const returnedPicture = await cloudinary.uploader.upload(
+          pictureToUpload,
+          {
+            folder: '/vinted/offers',
+            use_filename: true,
+          }
+        );
+        const newOffer = new Offer({
+          product_name: body.produc_name,
+          product_description: body.product_description,
+          product_price: body.product_price,
+          product_details: body.product_details,
+          owner: req.user,
+          product_image: returnedPicture,
+        });
+        await newOffer.save();
+        res.status(200).json(newOffer);
+      } else {
+        res.status(401).json({
+          error: { message: 'Missing a picture' },
+        });
+      }
       // } else {
       //   res.status(400).json({
       //     error: { message: 'The user is not identified' },
@@ -77,68 +139,6 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-// Router.post('/offer/publish', isAuthenticated, async (req, res) => {
-//   const body = req.fields;
-//   const token = req.headers.authorization.replace('Bearer ', '');
-
-//   try {
-//     if (Object.keys(body).length > 0) {
-//       if (token.length > 0) {
-//         const userSearched = await User.findOne({ token });
-//         if (userSearched) {
-//           // let details = [];
-//           // for (const key in body) {
-//           //   if (key === 'details') {
-//           //     details.push({ [key]: body[key] });
-//           //     details = [...body[key]];
-//           //   }
-//           // }
-//           if (req.files.picture) {
-//             const pictureToUpload = req.files.picture.path;
-//             const returnedPicture = await cloudinary.uploader.upload(
-//               pictureToUpload,
-//               {
-//                 folder: '/vinted/offers',
-//                 use_filename: true,
-//               }
-//             );
-//             const newOffer = new Offer({
-//               product_name: body.title,
-//               product_description: body.description,
-//               product_price: body.price,
-//               product_details: [...body.details],
-//               owner: req.user,
-//               product_image: returnedPicture,
-//             });
-//             await newOffer.save();
-//             res.status(200).json(newOffer);
-//           } else {
-//             res.status(401).json({
-//               error: { message: 'Missing a picture' },
-//             });
-//           }
-//         } else {
-//           res.status(400).json({
-//             error: { message: 'The user is not identified' },
-//           });
-//         }
-//       } else {
-//         res.status(400).json({
-//           error: { message: 'The request should include a user token' },
-//         });
-//       }
-//     } else {
-//       res.status(400).json({
-//         error: { message: 'The request should include body parameters' },
-//       });
-//     }
-//   } catch (error) {
-//     // res.status(400).json({ error: { message: error.message } });
-//     console.log(error);
-//     res.status(400).json({ error: error.message });
-//   }
-// });
 
 Router.put('/offer/modify', isAuthenticated, async (req, res) => {
   const query = req.query;
