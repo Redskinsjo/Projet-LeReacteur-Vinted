@@ -3,6 +3,7 @@ const Router = express.Router();
 const Offer = require('../models/Offer');
 const User = require('../models/User');
 const isAuthenticated = require('../middlewares/isAuthenticated');
+require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -137,8 +138,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
     }
   } catch (error) {
     // res.status(400).json({ error: { message: error.message } });
-    console.log(error);
-    res.status(401).json(error.message);
+    res.status(400).json(error);
   }
 });
 
