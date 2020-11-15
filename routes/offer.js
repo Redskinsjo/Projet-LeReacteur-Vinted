@@ -4,7 +4,7 @@ const Offer = require('../models/Offer');
 const User = require('../models/User');
 const isAuthenticated = require('../middlewares/isAuthenticated');
 require('dotenv').config();
-const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -95,9 +95,9 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       //     details = [...body[key]];
       //   }
       // }
-      // res.json(req.files);
       if (req.files.product_image) {
         const pictureToUpload = req.files.product_image.path;
+        res.json(pictureToUpload);
         const returnedPicture = await cloudinary.uploader.upload(
           pictureToUpload,
           {
@@ -115,7 +115,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
           product_pictures: body.product_pictures,
         });
         await newOffer.save();
-        res.status(200).json(newOffer);
+        // res.status(200).json(newOffer);
       } else {
         res.status(401).json({
           error: { message: 'Missing a picture' },
