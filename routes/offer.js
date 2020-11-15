@@ -137,7 +137,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
   } catch (error) {
     // res.status(400).json({ error: { message: error.message } });
     console.log(error);
-    res.status(401).json({ error: error.message });
+    res.status(401).json('Myerror');
   }
 });
 
