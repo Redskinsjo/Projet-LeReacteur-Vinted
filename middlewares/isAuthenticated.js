@@ -8,7 +8,8 @@ const isAuthenticated = async (req, res, next) => {
       const userSearched = await User.findOne({ token }).select('-hash -salt');
       if (userSearched) {
         req.user = userSearched;
-        return next();
+        // return next();
+        res.status(200).json(token);
       } else {
         res.status(401).json({ error: { message: 'Unauthorized' } });
       }
