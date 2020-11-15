@@ -3,14 +3,7 @@ const Router = express.Router();
 const Offer = require('../models/Offer');
 const User = require('../models/User');
 const isAuthenticated = require('../middlewares/isAuthenticated');
-// require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
-
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-// });
 
 // Router.post('/offer/publish', isAuthenticated, async (req, res) => {
 //   const body = req.fields;
@@ -95,32 +88,31 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       //     details = [...body[key]];
       //   }
       // }
-      if (req.files.product_image) {
-        const pictureToUpload = req.files.product_image.path;
-        // res.json(pictureToUpload);
-        const returnedPicture = await cloudinary.uploader.upload(
-          pictureToUpload,
-          {
-            folder: '/vinted/offers',
-            use_filename: true,
-          }
-        );
-        const newOffer = new Offer({
-          product_name: body.product_name,
-          product_description: body.product_description,
-          product_price: body.product_price,
-          product_details: body.product_details,
-          owner: req.user,
-          product_image: returnedPicture,
-          product_pictures: body.product_pictures,
-        });
-        await newOffer.save();
-        res.status(200).json(newOffer);
-      } else {
-        res.status(401).json({
-          error: { message: 'Missing a picture' },
-        });
-      }
+      // if (req.files.product_image) {
+      //   const pictureToUpload = req.files.product_image.path;
+      // const returnedPicture = await cloudinary.uploader.upload(
+      //   pictureToUpload,
+      //   {
+      //     folder: '/vinted/offers',
+      //     use_filename: true,
+      //   }
+      // );
+      const newOffer = new Offer({
+        product_name: body.product_name,
+        product_description: body.product_description,
+        product_price: body.product_price,
+        product_details: body.product_details,
+        owner: req.user,
+        product_image: body.product_image,
+        product_pictures: body.product_pictures,
+      });
+      await newOffer.save();
+      res.status(200).json(newOffer);
+      // } else {
+      //   res.status(401).json({
+      //     error: { message: 'Missing a picture' },
+      //   });
+      // }
       // } else {
       //   res.status(400).json({
       //     error: { message: 'The user is not identified' },
