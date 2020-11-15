@@ -63,7 +63,7 @@ Router.post('/offer/publish', async (req, res) => {
       // }
     } else {
       res.status(400).json({
-        error: { message: 'The request should include body parameters' },
+        error: { message: req.fields },
       });
     }
   } catch (error) {
