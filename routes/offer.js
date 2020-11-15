@@ -94,7 +94,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       //     details = [...body[key]];
       //   }
       // }
-      res.json(body);
+      res.json(req.files);
       if (req.files.product_image) {
         const pictureToUpload = req.files.product_image.path;
         const returnedPicture = await cloudinary.uploader.upload(
