@@ -45,7 +45,12 @@ Router.post('/offer/publish', async (req, res) => {
         product_image: body.product_image,
       });
       await newOffer.save();
-      res.status(200).json('newOffer has been added to the DB');
+      res
+        .status(200)
+        .json({
+          message: 'newOffer has been added to the DB',
+          body: req.fields,
+        });
       // } else {
       //   res.status(401).json({
       //     error: { message: 'Missing a picture' },
@@ -63,7 +68,7 @@ Router.post('/offer/publish', async (req, res) => {
       // }
     } else {
       res.status(400).json({
-        error: { message: req.fields },
+        error: { message: 'The request should include body parameters' },
       });
     }
   } catch (error) {
