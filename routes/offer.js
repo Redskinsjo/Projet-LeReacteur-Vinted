@@ -5,11 +5,11 @@ const User = require('../models/User');
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const cloudinary = require('cloudinary').v2;
 
-// cloudinary.config({
-//   cloud_name: "de822mdsy",
-//   api_key: "683325958423579",
-//   api_secret: "Ijex7t-hawHHXD9uX10L0f3Myso",
-// });
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 // Router.post('/offer/publish', isAuthenticated, async (req, res) => {
 //   const body = req.fields;
