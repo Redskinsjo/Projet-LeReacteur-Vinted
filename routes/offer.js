@@ -207,8 +207,8 @@ Router.get('/offers', async (req, res) => {
   try {
     const search = {};
     const sort = {};
-    const pageLimit = 2;
-    let skipCount = 0;
+    const pageLimit = q.limit;
+    let skipCount = q.page;
     for (const key in q) {
       if (key === 'title') search['product_name'] = new RegExp(q[key], 'i');
       if (key === 'priceMin') {
