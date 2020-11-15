@@ -16,9 +16,9 @@ app.use(formidable());
 app.use(cors());
 
 cloudinary.config({
-  cloud_name: 'de822mdsy',
-  api_key: '683325958423579',
-  api_secret: 'Ijex7t-hawHHXD9uX10L0f3Myso',
+  cloud_name: process.env.CLOUDINARY_API_KEY,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // Routes
