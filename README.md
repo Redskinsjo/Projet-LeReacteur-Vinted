@@ -1,1 +1,1 @@
-# backend-vinted
+# api-vinted
