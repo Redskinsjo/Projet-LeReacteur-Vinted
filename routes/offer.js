@@ -81,12 +81,12 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       // if (token.length > 0) {
       // const userSearched = await User.findOne({ token });
       // if (userSearched) {
-      // let details = [];
-      // for (const key in body) {
-      //   if (key === 'details') {
-      //     details.push({ [key]: body[key] });
-      //     details = [...body[key]];
-      //   }
+      let details = [];
+      for (const key in body) {
+        if (key === 'details') {
+          details.push({ [key]: body[key] });
+          // details = [...body[key]];
+        }
       // }
       let returnedPicture;
       if (req.files.product_image) {
@@ -101,7 +101,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
         product_name: body.product_name,
         product_description: body.product_description,
         product_price: body.product_price,
-        product_details: body.product_details,
+        product_details: details,
         owner: req.user,
         product_image: returnedPicture,
         product_pictures: body.product_pictures,
