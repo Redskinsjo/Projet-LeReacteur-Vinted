@@ -87,7 +87,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
           details.push({ [key]: body[key] });
           // details = [...body[key]];
         }
-      // }
+      }
       let returnedPicture;
       if (req.files.product_image) {
         const pictureToUpload = req.files.product_image.path;
