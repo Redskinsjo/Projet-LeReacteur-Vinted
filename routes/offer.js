@@ -88,15 +88,15 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       //     details = [...body[key]];
       //   }
       // }
-      // if (req.files.product_image) {
-      //   const pictureToUpload = req.files.product_image.path;
-      // const returnedPicture = await cloudinary.uploader.upload(
-      //   pictureToUpload,
-      //   {
-      //     folder: '/vinted/offers',
-      //     use_filename: true,
-      //   }
-      // );
+      if (req.files.product_image) {
+        const pictureToUpload = req.files.product_image.path;
+      const returnedPicture = await cloudinary.uploader.upload(
+        pictureToUpload,
+        {
+          folder: '/vinted/offers',
+          use_filename: true,
+        }
+      );
 
       const newOffer = new Offer({
         product_name: body.product_name,
@@ -104,7 +104,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
         product_price: body.product_price,
         product_details: body.product_details,
         owner: req.user,
-        product_image: body.product_image,
+        product_image: req.files.product_image,
         product_pictures: body.product_pictures,
       });
       await newOffer.save();
