@@ -83,7 +83,11 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       // if (userSearched) {
       let details = [];
       for (const key in body) {
-        if (key !== 'product_name' && key !== 'product_image' && key !== 'product_price' & key !== 'product_description');
+        if (
+          key !== 'product_name' &&
+          key !== 'product_image' &&
+          (key !== 'product_price') & (key !== 'product_description')
+        ) {
           details.push({ [key]: body[key] });
           // details = [...body[key]];
         }
