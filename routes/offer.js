@@ -90,13 +90,14 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       // }
       if (req.files.product_image) {
         const pictureToUpload = req.files.product_image.path;
-      const returnedPicture = await cloudinary.uploader.upload(
-        pictureToUpload,
-        {
-          folder: '/vinted/offers',
-          use_filename: true,
-        }
-      );
+        const returnedPicture = await cloudinary.uploader.upload(
+          pictureToUpload,
+          {
+            folder: '/vinted/offers',
+            use_filename: true,
+          }
+        );
+      }
 
       const newOffer = new Offer({
         product_name: body.product_name,
