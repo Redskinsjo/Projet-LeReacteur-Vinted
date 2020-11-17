@@ -97,6 +97,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       //     use_filename: true,
       //   }
       // );
+
       const newOffer = new Offer({
         product_name: body.product_name,
         product_description: body.product_description,
@@ -108,6 +109,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
       });
       await newOffer.save();
       res.status(200).json(newOffer);
+
       // } else {
       //   res.status(401).json({
       //     error: { message: 'Missing a picture' },
@@ -130,7 +132,7 @@ Router.post('/offer/publish', isAuthenticated, async (req, res) => {
     }
   } catch (error) {
     // res.status(400).json({ error: { message: error.message } });
-    res.status(400).json(error);
+    res.status(400).json(error.response);
   }
 });
 
