@@ -26,11 +26,13 @@ const userRoutes = require('./routes/user');
 app.use(userRoutes);
 const offerRoutes = require('./routes/offer');
 app.use(offerRoutes);
+const paymentRoutes = require('./routes/payment');
+app.use(paymentRoutes);
 
 app.all('*', (req, res) => {
   res.status(400).json({ error: { message: "This route doesn't exist." } });
 });
 
 app.listen(process.env.PORT, () => {
-  console.log('Server started...');
+  console.log('Server started... PORT', process.env.PORT);
 });
