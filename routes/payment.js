@@ -5,9 +5,9 @@ const stripe = require('stripe')(
   'sk_test_51HoVKPD5Cg0Rg5MbHUiFkyi1UXw66d1Wus0unhQ25ulapDZm7I5gGMcFT3TX7IwJlq1EdzSe4kePXFU59GACeEiS00zzC4E7To'
 );
 
+// Send transaction data to Stripe SaaS
 Router.post('/payment', async (req, res) => {
   const body = req.fields;
-  console.log(body);
 
   try {
     const response = await stripe.charges.create({

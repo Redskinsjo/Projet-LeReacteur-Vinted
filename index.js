@@ -5,12 +5,14 @@ const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 const cors = require('cors');
 
+// Connection to the DB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
 });
 
+// Initialization of the server
 const app = express();
 app.use(formidable());
 app.use(cors());
