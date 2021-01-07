@@ -4,24 +4,17 @@ const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
 const Router = express.Router();
+// Not used yet
 const cloudinary = require("cloudinary");
 
 Router.post("/user/signup", async (req, res) => {
-    const body = req.fields;
+    const { username, email, password, phone } = req.fields;
 
-    if (!body.username) {
-        res.status(400).json({ error: { message: "Missing username" } });
-    } else if (!body.email) {
-        res.status(400).json({ error: { message: "Missing an email" } });
-    } else if (!body.password) {
-        res.status(400).json({ error: { message: "Missing a password" } });
-    } else {
-        const { email, username, phone, password } = body;
+    try {
+        if (username && email && password) {
+            const userFound = await User.findOne({ email });
 
-        try {
-            const oneUser = await User.findOne({ email });
-
-            if (!oneUser) {
+            if (!userFound) {
                 const token = uid2(64);
                 const salt = uid2(64);
                 const hash = SHA256(password + salt).toString(encBase64);
@@ -36,6 +29,8 @@ Router.post("/user/signup", async (req, res) => {
                     salt,
                     hash,
                 });
+
+                // However the user can't upload a picture on signup yet
                 if (Object.keys(req.files) > 0) {
                     const pictureToUpload = req.files.picture.path;
                     const result = await cloudinary.uploader.upload(
@@ -43,6 +38,8 @@ Router.post("/user/signup", async (req, res) => {
                     );
                     newUser.account.avatar = result;
                 }
+                // ----------------------------------
+
                 await newUser.save();
                 res.status(200).json({
                     _id: newUser._id,
@@ -52,12 +49,22 @@ Router.post("/user/signup", async (req, res) => {
                 });
             } else {
                 res.status(400).json({
-                    error: { message: "Email address is already taken" },
+                    error: {
+                        message:
+                            "A user with this email address already exists",
+                    },
                 });
             }
-        } catch (error) {
-            res.status(400).json({ error: { message: error.message } });
+        } else {
+            res.status(400).json({
+                error: {
+                    message:
+                        "These fields should be present: username, email, password",
+                },
+            });
         }
+    } catch (error) {
+        res.status(400).json({ error: { message: error.message } });
     }
 });
 
@@ -66,16 +73,16 @@ Router.post("/user/login", async (req, res) => {
 
     try {
         if (email && password) {
-            const userSearched = await User.findOne({ email });
-            if (userSearched) {
-                const { salt, hash } = userSearched;
+            const userFound = await User.findOne({ email });
+            if (userFound) {
+                const { salt, hash } = userFound;
                 const identified =
                     SHA256(password + salt).toString(encBase64) === hash;
                 if (identified) {
                     res.status(200).json({
-                        _id: userSearched._id,
-                        token: userSearched.token,
-                        account: userSearched.account,
+                        _id: userFound._id,
+                        token: userFound.token,
+                        account: userFound.account,
                     });
                 } else {
                     res.status(401).json({
@@ -83,7 +90,11 @@ Router.post("/user/login", async (req, res) => {
                     });
                 }
             } else {
-                res.status(400).json({ error: { message: "User not found" } });
+                res.status(400).json({
+                    error: {
+                        message: "No user exist with this email address",
+                    },
+                });
             }
         } else {
             res.status(400).json({ error: { message: "Missing credentials" } });

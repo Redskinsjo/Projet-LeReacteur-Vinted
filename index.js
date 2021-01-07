@@ -6,7 +6,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 // Connection to the DB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect("mongodb://localhost/test"/*process.env.MONGODB_URI*/, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
